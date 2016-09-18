@@ -257,6 +257,22 @@
 (define-key freebasic-mode-map (kbd "<f5>" ) nil)
 (define-key freebasic-mode-map (kbd "<f5>" ) 'freebasic-quickrun)
 
+(define-key freebasic-mode-map [menu-bar] (make-sparse-keymap))
+
+;;Menu bar 
+(let ((menuMap (make-sparse-keymap "FreeBASIC")))
+  (define-key freebasic-mode-map [menu-bar freebasic] (cons "FreeBASIC" menuMap))
+  (define-key menuMap [about]
+    '("About freebasic-mode" . nil )
+    )
+  (define-key menuMap [qrun]
+    '("Quick Run" . freebasic-quickrun))
+  (define-key menuMap [compile]
+    '("Compile " . freebasic-compile))
+  (define-key menuMap [indent-buffer]
+    '("Indent buffer" . freebasic-indent-buffer))
+  )
+
 
 ;; add the mode to the `features' list
 (provide 'freebasic-mode)
