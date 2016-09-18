@@ -63,9 +63,10 @@
 ;;(defconst freebasic-beg-regexp "[ \t]\\<\\(if\\|else\\|elseif\\|do\\|while\\|wend\\)\\>")
 ;;(defconst freebasic-beg-regexp "^[ \t]*#?if.+\\then")
 
-(defconst freebasic-beg-regexp "[ \t]*#?\\<\\(if.+then$\\|else\\|do\\|select\\|while\\|for\\|with\\|type\\|function\\|sub\\)\\>")
-(defconst freebasic-end-regexp  "[ \t]*#?\\<\\(\\end[ \t]*if\\|end[ \t]*select\\|loop\\|next\\|wend\\|end[ \t]*with\\|end[ \t]*type\\|end[ \t]*function\\|end[ \t]*sub\\)\\>")
+(defconst freebasic-beg-regexp "[ \t]*#?\\<\\(if.+then$\\|else\\|do\\|select\\|while\\|for\\|with\\|type\\|function\\|constructor\\|property\\|sub\\)\\>")
+(defconst freebasic-end-regexp  "[ \t]*#?\\<\\(\\end[ \t]*if\\|end[ \t]*select\\|loop\\|next\\|wend\\|end[ \t]*with\\|end[ \t]*type\\|end[ \t]*function\\|end[ \t]*sub\\|end[ \t]*constructor\\|end[ \t]*property\\)\\>")
 
+(defconst freebasic-label-regexp ".+:$")
 (defconst freebasic-el-regexp "^[ \t]*#?\\<\\(\\else\\|elseif\\|case\\)\\>")
 
 (add-to-list 'auto-mode-alist '("\\.bas\\'" . freebasic-mode))
@@ -149,6 +150,7 @@
       (indent-line-to 0)	
     (let ((not-indented t) cur-indent)
       (if (or
+	   (looking-at freebasic-label-regexp)
 	   (looking-at freebasic-el-regexp)
 	   (looking-at freebasic-end-regexp))  ;end of the block
 	  (progn
