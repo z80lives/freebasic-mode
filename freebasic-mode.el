@@ -262,9 +262,9 @@
 ;;Menu bar 
 (let ((menuMap (make-sparse-keymap "FreeBASIC")))
   (define-key freebasic-mode-map [menu-bar freebasic] (cons "FreeBASIC" menuMap))
-  (define-key menuMap [about]
-    '("About freebasic-mode" . nil )
-    )
+;  (define-key menuMap [about]
+;    '("About freebasic-mode" . nil )
+;    )
   (define-key menuMap [qrun]
     '("Quick Run" . freebasic-quickrun))
   (define-key menuMap [compile]
