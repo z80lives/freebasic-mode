@@ -7,6 +7,7 @@
 ;; This file is not part of GNU Emacs.
 
 ;;; License:
+;;; This file was created for personal use.
 ;;; Feel free to modify and redistribute the file.
 
 ;; Freebasic Mode for Emacs
@@ -66,41 +67,6 @@
 (defconst freebasic-end-regexp  "[ \t]*#?\\<\\(\\end[ \t]*if\\|end[ \t]*select\\|loop\\|next\\|wend\\|end[ \t]*with\\|end[ \t]*type\\|end[ \t]*function\\|end[ \t]*sub\\)\\>")
 
 (defconst freebasic-el-regexp "^[ \t]*#?\\<\\(\\else\\|elseif\\|case\\)\\>")
-
-;; Config
-(defvar freebasic-mode-hook nil)
-;; (defvar freebasic-mode-map
-;;   (let ((freebasic-mode-map (make-keymap)))
-;;     (define-key freebasic-mode-map
-;;       "\C-j" 'newline-and-indent)
-;;     (define-key freebasic-mode-map
-;;       (kbd "C-c C-c" 'freebasic-comment-dwim))
-;;   )
-;; )
-
-;; (defvar freebasic-mode-map nil "Keymap for freebasic-mode")
-;; (when (not freebasic-mode-map)
-;;   (setq freebasic-mode-map (make-sparse-keymap))
-;;   (define-key freebasic-mode-map (kbd "C-c C-c" 'freebasic-comment-dwim))
-;;   ;;(define-key freebasic-mode-map (kbd "C-c C-c" 'freebasic-comment))
-;;     (define-key freebasic-mode-map [remap comment-dwim] 'freebasic-comment-dwim)
-;;   )
-
-;; (defvar freebasic-mode-map
-;;   (let ((map (make-sparse-keymap)))
-;;     (define-key map [remap comment-dwim] 'freebasic-comment-dwim)
-;;     (define-key map "\C-j" 'freebasic-comment)
-;;     (define-key map (kbd "C-c C-c" 'freebasic-comment-dwim))
-;;     map)
-;;   )
-
-(defvar freebasic-mode-map		
-  (let ((map (make-sparse-keymap)))
-    (define-key map (kbd "C-c C-c") 'freebasic-comment-dwim)
-    map)
-  "Keymap for freebasic Mode")
-
-(use-local-map freebasic-mode-map)
 
 (add-to-list 'auto-mode-alist '("\\.bas\\'" . freebasic-mode))
 
@@ -220,6 +186,30 @@
   (interactive)
   (indent-region (point-min) (point-max)))
 
+;;(defvar freebasic-compile-cmd nil)
+(defun freebasic-compile()
+  "Compiles the current freebasic file."
+  (interactive)
+  ;;(start-process "./fbc" (buffer-file-name))
+  (setq compile-cmd (concat "fbc " (buffer-name)
+			    
+			    )
+	)
+  (shell-command compile-cmd)
+  (shell-command
+   (concat "echo " (buffer-file-name) "| sed 's/.bas//g' ")
+   )
+  )
+
+(defun freebasic-quickrun()
+  "Compiles the current freebasic file."
+  (interactive)
+  ;;(start-process "./fbc" (buffer-file-name))
+  (setq compile-cmd (concat "fbc -x ~fbout " (buffer-name) " && ./~fbout" )
+	)
+  (shell-command compile-cmd)
+  )
+
 ;;;###autoload
 (define-derived-mode freebasic-mode fundamental-mode
   "FreeBASIC Mode"
@@ -254,6 +244,19 @@
 (setq fb-preproc-regexp-nil)
 
 ;;(run-hooks 'freebasic-mode-hook)
+
+;; Config
+;(defvar freebasic-mode-hook nil)
+
+(define-key freebasic-mode-map (kbd "C-c C-c" ) nil)
+(define-key freebasic-mode-map (kbd "C-c C-c" ) 'freebasic-comment-dwim)
+
+(define-key freebasic-mode-map (kbd "C-c c" ) nil)
+(define-key freebasic-mode-map (kbd "C-c c" ) 'freebasic-compile)
+
+(define-key freebasic-mode-map (kbd "<f5>" ) nil)
+(define-key freebasic-mode-map (kbd "<f5>" ) 'freebasic-quickrun)
+
 
 ;; add the mode to the `features' list
 (provide 'freebasic-mode)
