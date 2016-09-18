@@ -9,13 +9,11 @@
 ;;; License:
 ;;; Feel free to modify and redistribute the file.
 
-;;; Commentary:
-
+;; Freebasic Mode for Emacs
 ;; emacs Major mode for freebasic language.
 
-;; full doc on how to use here
-
-;;; Code:
+;; Add the following line to your .emacs file
+;; (require 'freebasic-mode)
 
 ;; The following keywords were generated using 
 ;;  'fbfull.lng' file that came along with FBIDE
@@ -55,15 +53,189 @@
         ;; in general, longer words first
         ))
 
+
+;; Regexp
+(defconst freebasic-if-regexp "^[ \t]*#?if")
+(defconst freebasic-else-regexp "^[ \t]*#?else\\(if\\select\\)?")
+(defconst freebasic-endif-regexp "[ \t]*#?[Ee]nd[ \t]*[Ii]f")
+
+;;(defconst freebasic-beg-regexp "[ \t]\\<\\(if\\|else\\|elseif\\|do\\|while\\|wend\\)\\>")
+;;(defconst freebasic-beg-regexp "^[ \t]*#?if.+\\then")
+
+(defconst freebasic-beg-regexp "[ \t]*#?\\<\\(if.+then$\\|else\\|do\\|select\\|while\\|for\\|with\\|type\\|function\\|sub\\)\\>")
+(defconst freebasic-end-regexp  "[ \t]*#?\\<\\(\\end[ \t]*if\\|end[ \t]*select\\|loop\\|next\\|wend\\|end[ \t]*with\\|end[ \t]*type\\|end[ \t]*function\\|end[ \t]*sub\\)\\>")
+
+(defconst freebasic-el-regexp "^[ \t]*#?\\<\\(\\else\\|elseif\\|case\\)\\>")
+
+;; Config
+(defvar freebasic-mode-hook nil)
+;; (defvar freebasic-mode-map
+;;   (let ((freebasic-mode-map (make-keymap)))
+;;     (define-key freebasic-mode-map
+;;       "\C-j" 'newline-and-indent)
+;;     (define-key freebasic-mode-map
+;;       (kbd "C-c C-c" 'freebasic-comment-dwim))
+;;   )
+;; )
+
+;; (defvar freebasic-mode-map nil "Keymap for freebasic-mode")
+;; (when (not freebasic-mode-map)
+;;   (setq freebasic-mode-map (make-sparse-keymap))
+;;   (define-key freebasic-mode-map (kbd "C-c C-c" 'freebasic-comment-dwim))
+;;   ;;(define-key freebasic-mode-map (kbd "C-c C-c" 'freebasic-comment))
+;;     (define-key freebasic-mode-map [remap comment-dwim] 'freebasic-comment-dwim)
+;;   )
+
+;; (defvar freebasic-mode-map
+;;   (let ((map (make-sparse-keymap)))
+;;     (define-key map [remap comment-dwim] 'freebasic-comment-dwim)
+;;     (define-key map "\C-j" 'freebasic-comment)
+;;     (define-key map (kbd "C-c C-c" 'freebasic-comment-dwim))
+;;     map)
+;;   )
+
+(defvar freebasic-mode-map		
+  (let ((map (make-sparse-keymap)))
+    (define-key map (kbd "C-c C-c") 'freebasic-comment-dwim)
+    map)
+  "Keymap for freebasic Mode")
+
+(use-local-map freebasic-mode-map)
+
+(add-to-list 'auto-mode-alist '("\\.bas\\'" . freebasic-mode))
+
+(defvar freebasic-indent-offset 4
+  "*Indentation offset for freebasic-mode")
+
+(defun is-freebasic-line-comment ()
+  (save-excursion
+    (beginning-of-line 1)
+    (looking-at "[ \t]*\'")
+    ))
+
+(defun freebasic-comment ()
+  "Comment current line of freebasic code"
+  (interactive)
+  (beginning-of-line 1)
+  (insert "'")
+  )
+(defun freebasic-uncomment ()
+  "Uncomments the current line of freebasic code"
+  (interactive)
+  (when (is-freebasic-line-comment)
+    (beginning-of-line 1)
+    (search-forward "\'")
+    (delete-backward-char 1)
+    ))
+
+(defun freebasic-comment-region (p1 p2)
+  "Comment out the selected region of freebasic code "
+  (interactive "r")
+  (let ((deactivate-mark nil))
+    (save-excursion
+      (goto-char p2)
+      (while (>= (point) p1)
+	(freebasic-comment)
+	(previous-line)
+	))))
+
+(defun freebasic-uncomment-region (p1 p2)
+  "Uncomments the selected region of freebasic comments "
+  (interactive "r")
+  (let ((deactivate-mark nil))
+    (save-excursion
+      (goto-char p2)
+      (while (>= (point) p1)
+	(freebasic-uncomment)
+	(previous-line)
+	))))
+
+
+(defun freebasic-comment-dwim ()
+  "Comment or uncomment current line of freebasic code."
+  (interactive)
+  (let (p1 p2)
+    (if (use-region-p)
+	(save-excursion
+	  (setq p1 (region-beginning) p2 (region-end))
+	  (goto-char p1)
+	  (if (is-freebasic-line-comment)
+	      (uncomment-region p1 p2)
+	    (comment-region p1 p2)
+	      ;;(freebasic-uncomment-region p1 p2)
+	    ;;(freebasic-comment-region p1 p2)
+	    )
+	  )
+      (progn
+	(if (is-freebasic-line-comment)
+	    (freebasic-uncomment)
+	  (freebasic-comment)
+	)
+    )
+   ))    
+  )
+
+(defun freebasic-indent-line ()
+  "Indent current line of free-basic code."
+  (interactive)
+  (beginning-of-line)
+  (if (bobp)
+      (indent-line-to 0)	
+    (let ((not-indented t) cur-indent)
+      (if (or
+	   (looking-at freebasic-el-regexp)
+	   (looking-at freebasic-end-regexp))  ;end of the block
+	  (progn
+	    (save-excursion
+	      (forward-line -1)
+	      (setq cur-indent (- (current-indentation) freebasic-indent-offset)))
+	    (if (< cur-indent 0)
+		(setq cur-indent 0))
+	    )
+	(save-excursion
+	  (while not-indented 
+	    (forward-line -1)
+	    (if (looking-at freebasic-end-regexp)
+		 ;indent same as the last end block
+		(progn
+		  (setq cur-indent (current-indentation))
+		  (setq not-indented nil))
+	      (if
+		   (looking-at freebasic-beg-regexp)
+		   
+		  (progn
+		    (setq cur-indent (+ (current-indentation) freebasic-indent-offset))
+		    (setq not-indented nil))
+		(if (bobp)
+		    (setq not-indented nil))))))
+	);;ENDIF
+      
+      (if cur-indent
+	  (indent-line-to cur-indent)
+	(indent-line-to 0))))
+  )
+
+(defun freebasic-indent-buffer ()
+  "Indent the currently visited buffer."
+  (interactive)
+  (indent-region (point-min) (point-max)))
+
 ;;;###autoload
 (define-derived-mode freebasic-mode fundamental-mode
   "FreeBASIC Mode"
   "Major mode for FreeBASIC programming language."
 
+  (setq-local comment-start "'")
+  (setq-local comment-end "")
+  
   ;; code for syntax highlighting
   (setq font-lock-defaults '((fb-font-lock-keywords) nil t) )
-;;  (setq font-lock-keywords-case-fold-search t)
--  )
+  ;;  (setq font-lock-keywords-case-fold-search t)
+  (make-local-variable 'freebasic-indent-offset)
+  (set (make-local-variable 'indent-line-function) 'freebasic-indent-line)
+  ;;  (use-local-map freebasic-mode-map)
+  ;;(derived-mode-set-keymap 'freebasic-mode)
+  )
 
 ;; clear memory. no longer needed
 (setq fb-keywords nil)
@@ -81,9 +253,12 @@
 (setq fb-comment-regexp-nil)
 (setq fb-preproc-regexp-nil)
 
+;;(run-hooks 'freebasic-mode-hook)
+
 ;; add the mode to the `features' list
 (provide 'freebasic-mode)
 
+;;(freebasic-indent-buffer)
 ;; Local Variables:
 ;; coding: utf-8
 ;; End:
