@@ -34,11 +34,11 @@
 (setq fb-type-regexp (regexp-opt fb-types 'words))
 (setq fb-operations-regexp (regexp-opt fb-operations 'words))
 (setq fb-builtins-regexp (regexp-opt fb-builtins 'words))
-(setq fb-preproc-regexp "#.*$")
+(setq fb-preproc-regexp "^#\\w*")
 
 ;(setq fb-comment-regexp "'[^\"']*.$")
 
-;;(setq fb-quote-regexp "1.*")
+(setq fb-quote-regexp "\".\"$")
 
 ;; create the list for font-lock.
 ;; each category of keyword is given a particular face
@@ -52,7 +52,7 @@
 	(,fb-operations-regexp . font-lock-negation-char-face)
 	(,fb-builtins-regexp . font-lock-builtin-face)
 
-	;;(,fb-quote-regexp . font-lock-string-face)
+	;(,fb-quote-regexp . font-lock-string-face)
 
 	
         ;; note: order above matters, because once colored, that part won't change.
@@ -66,6 +66,7 @@
 (defconst freebasic-if-regexp "^[ \t]*#?if")
 (defconst freebasic-else-regexp "^[ \t]*#?else\\(if\\select\\)?")
 (defconst freebasic-endif-regexp "[ \t]*#?[Ee]nd[ \t]*[Ii]f")
+
 
 ;;(defconst freebasic-beg-regexp "[ \t]\\<\\(if\\|else\\|elseif\\|do\\|while\\|wend\\)\\>")
 ;;(defconst freebasic-beg-regexp "^[ \t]*#?if.+\\then")
@@ -254,6 +255,7 @@
   
   ;(make-local-variable 'freebasic-indent-offset)
   (set (make-local-variable 'indent-line-function) 'freebasic-indent-line)
+
   
   ;;  (use-local-map freebasic-mode-map)
   ;;(derived-mode-set-keymap 'freebasic-mode)
