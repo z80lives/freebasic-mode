@@ -72,8 +72,8 @@
 ;;(defconst freebasic-beg-regexp "[ \t]\\<\\(if\\|else\\|elseif\\|do\\|while\\|wend\\)\\>")
 ;;(defconst freebasic-beg-regexp "^[ \t]*#?if.+\\then")
 
-(defconst freebasic-beg-regexp "[ \t]*#?\\<\\(if.+then$\\|else\\|do\\|select\\|while\\|for\\|with\\|type\\|function\\|constructor\\|constructor\\|property\\|sub\\|operator\\)\\>")
-(defconst freebasic-end-regexp  "[ \t]*#?\\<\\(\\end[ \t]*if\\|end[ \t]*select\\|loop\\|next\\|wend\\|end[ \t]*with\\|end[ \t]*type\\|end[ \t]*constructor\\|end[ \t]*function\\|end[ \t]*sub\\|end[ \t]*constructor\\|end[ \t]*property\\|end[ \t]*operator\\)\\>")
+(defconst freebasic-beg-regexp "[ \t]*#?\\<\\(if.+then$\\|else\\|do\\|select\\|while\\|for\\|with\\|type\\|function\\|constructor\\|constructor\\|property\\|sub\\|operator\\|enum\\)\\>")
+(defconst freebasic-end-regexp  "[ \t]*#?\\<\\(\\end[ \t]*if\\|end[ \t]*select\\|loop\\|next\\|wend\\|end[ \t]*with\\|end[ \t]*type\\|end[ \t]*constructor\\|end[ \t]*function\\|end[ \t]*sub\\|end[ \t]*constructor\\|end[ \t]*property\\|end[ \t]*operator\\|end[ \t]*enum\\)\\>")
 
 (defconst freebasic-label-regexp ".+:$")
 (defconst freebasic-el-regexp "^[ \t]*#?\\<\\(\\else\\|elseif\\|case\\)\\>")
