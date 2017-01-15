@@ -61,6 +61,7 @@
         ;; in general, longer words first
         ))
 
+(modify-syntax-entry ?_ "w")
 
 ;; Regexp
 (defconst freebasic-if-regexp "^[ \t]*#?if")
@@ -307,7 +308,6 @@
   (define-key menuMap [indent-buffer]
     '("Indent buffer" . freebasic-indent-buffer))
   )
-
 
 ;; add the mode to the `features' list
 (provide 'freebasic-mode)
