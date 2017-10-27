@@ -75,9 +75,8 @@
 (defconst freebasic-beg-regexp "[ \t]*#?\\<\\(if.+then$\\|else\\|do\\|select\\|while\\|for\\|with\\|type\\|function\\|constructor\\|constructor\\|property\\|sub\\|operator\\|enum\\)\\>")
 (defconst freebasic-end-regexp  "[ \t]*#?\\<\\(\\end[ \t]*if\\|end[ \t]*select\\|loop\\|next\\|wend\\|end[ \t]*with\\|end[ \t]*type\\|end[ \t]*constructor\\|end[ \t]*function\\|end[ \t]*sub\\|end[ \t]*constructor\\|end[ \t]*property\\|end[ \t]*operator\\|end[ \t]*enum\\)\\>")
 
-(defconst freebasic-label-regexp ".+:$")
+(defconst freebasic-label-regexp "$case[\\s]+[\\w]+$")
 (defconst freebasic-el-regexp "^[ \t]*#?\\<\\(\\else\\|elseif\\|case\\)\\>")
-
 (add-to-list 'auto-mode-alist '("\\.bas\\'" . freebasic-mode))
 
 (defvar freebasic-indent-offset 4
@@ -171,7 +170,7 @@
 	    )
 	(save-excursion
 	  (while not-indented 
-	    (forward-line -1)
+	    (forward-line -1)	    
 	    (if (looking-at freebasic-end-regexp)
 		 ;indent same as the last end block
 		(progn
