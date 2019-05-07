@@ -275,8 +275,8 @@
 (setq fb-types-regexp nil)
 (setq fb-operations-regexp nil)
 (setq fb-builtins-regexp nil)
-(setq fb-comment-regexp-nil)
-(setq fb-preproc-regexp-nil)
+(setq fb-comment-regexp nil)
+(setq fb-preproc-regexp nil)
 
 ;;(run-hooks 'freebasic-mode-hook)
 
