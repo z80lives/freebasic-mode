@@ -217,8 +217,9 @@
   ;;(start-process "./fbc" (buffer-file-name))
 					;(setq compile-cmd (concat "fbc -x ~fbout " (buffer-name) " && ./~fbout" )
    (setq compile-cmd (concat "fbc " (buffer-file-name)  " -x ./~fbout && ./~fbout && rm ./~fbout" )
-  (shell-command compile-cmd)
-)
+				 (shell-command compile-cmd)
+				 )
+	 )
 
    
    (defvar freebasic-mode-syntax-table
