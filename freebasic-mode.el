@@ -216,21 +216,20 @@
   (interactive)
   ;;(start-process "./fbc" (buffer-file-name))
 					;(setq compile-cmd (concat "fbc -x ~fbout " (buffer-name) " && ./~fbout" )
-   (setq compile-cmd (concat "fbc " (buffer-file-name)  " -x ./~fbout && ./~fbout && rm ./~fbout" )
-				 (shell-command compile-cmd)
+   (setq compile-cmd (concat "fbc " (buffer-file-name)  " -x ./~fbout && ./~fbout && rm ./~fbout" ))
+				 (shell-command compile-cmd)				 
 				 )
-	 )
 
    
-   (defvar freebasic-mode-syntax-table
-     (let ((table (make-syntax-table)))
-       (modify-syntax-entry ?' "< . 23" table) 	
-       (modify-syntax-entry ?\/ ". 14c" table)
-       (modify-syntax-entry ?\n ">" table)       
-	(modify-syntax-entry ?\" "\"" table)
-	table)
-     "Syntax table for `freebasic-mode' buffers."
-     )
+(defvar freebasic-mode-syntax-table
+  (let ((table (make-syntax-table)))
+    (modify-syntax-entry ?' "< . 23" table) 	
+    (modify-syntax-entry ?\/ ". 14c" table)
+    (modify-syntax-entry ?\n ">" table)       
+    (modify-syntax-entry ?\" "\"" table)
+    table)
+  "Syntax table for `freebasic-mode' buffers."
+  )
 
 ;;;###autoload
 (define-derived-mode freebasic-mode fundamental-mode
